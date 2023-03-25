@@ -5,6 +5,8 @@ import Input from "./Input";
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
+import { useEffect } from "react";
+import { list } from '../service/API';
 
 const names = [
   {type: 'Nome:', name: 'name'},
@@ -36,6 +38,15 @@ export default function App() {
     event.preventDefault();
 
   }
+
+  useEffect(() => {
+    list().then((data) => {
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    })
+  }, []);
+
 
   return (
     <>
