@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-export default function Form({children}) {
-  return <Wrapper>{children}</Wrapper>
+export default function Form({children, ...otherprops}) {
+  return <Wrapper {...otherprops}>{children}</Wrapper>
 };
 
 const Wrapper = styled.form`

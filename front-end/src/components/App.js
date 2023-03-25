@@ -32,12 +32,17 @@ export default function App() {
     }
   }
 
+  function register(event){
+    event.preventDefault();
+
+  }
+
   return (
     <>
       <GlobalStyles />
       <Tilte>Cadastro de Pessoa</Tilte>
       <Container>
-        <Form>
+        <Form onSubmit={register}>
           {names.map((value, index) => <Input key={index} type={value.type} name={value.name}/>)}
           <div>  
             <p>UF:</p>
@@ -46,7 +51,7 @@ export default function App() {
             </select>
           </div>
           <span>
-            <button>Excluir</button>
+            <Delete>Excluir</Delete>
             <button>Gravar</button>
           </span>
         </Form>
@@ -67,6 +72,10 @@ export default function App() {
     </>
   )
 }
+
+const Delete = styled.button`
+  display: none;
+`;
 
 const Tilte = styled.h1`
   font-family: 'Lexend Deca', sans-serif;
