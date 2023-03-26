@@ -14,8 +14,8 @@ const UFs = [
 ]
 
 export default function App() {
-  const [phoneArray, setPhoneArray] = useState([1, 2, 3, 4, 5]);
-  const [phoneArray2, setPhoneArray2] = useState([...phoneArray]);
+  const [phoneArray, setPhoneArray] = useState(['', '', '', '', '']);
+  const [descArray, setDescArray] = useState([...phoneArray]);
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [rg, setRg] = useState('')
@@ -31,33 +31,58 @@ export default function App() {
       const arr = [...phoneArray]; 
       arr.pop(); 
       setPhoneArray([...arr]);
-      setPhoneArray2([...arr]);
+      setDescArray([...arr]);
     }
   }
 
   function addPhones(){
-    setPhoneArray([...phoneArray, phoneArray[phoneArray.length-1]+1]);
-    setPhoneArray2([...phoneArray2, phoneArray2[phoneArray2.length-1]+1]);
+    setPhoneArray([...phoneArray, phoneArray[phoneArray.length-1]]);
+    setDescArray([...descArray, descArray[descArray.length-1]]);
   }
 
   function register(event){
     event.preventDefault();
-    if(uf === 'Select' || uf === '') toast('Selecione um Estado válido!');
+
+    if(name === '' || cpf === '' || rg === '' || cep === '' || street === '' || complement === '' || sector === '' || city === '' || uf === 'Select' || uf === '')
+      toast('Preencha os dados corretamente!');
     else{
       const arra = [name, cpf, rg, cep, street, complement, sector, city, uf];
       console.log(arra);
+
+      if(!(validateArrays(phoneArray, descArray))) toast('Insira os dados do telefone corretamente!');
     }
   }
 
   function handleChangePhone(e, index, model){
-    console.log(phoneArray[index], phoneArray2[index]);
     if(model === 1){
       phoneArray[index] = e.target.value;
       setPhoneArray([...phoneArray]);
     }else{
-      phoneArray2[index] = e.target.value;
-      setPhoneArray2([...phoneArray2]);
+      descArray[index] = e.target.value;
+      setDescArray([...descArray]);
     }
+  }
+
+  function validateArrays(arrPhones, arrDesc){
+    let contPhones = 0;
+    let auxPhones = [];
+    let auxDesc = [];
+    arrPhones.map((value, index) => {
+      if(arrPhones[index] !== '') {
+        contPhones++;
+        auxPhones.push(index);
+      }
+    });
+    let contDesc = 0;
+    arrDesc.map((value, index) => {
+      if(arrDesc[index] !== '') {
+        contDesc++;
+        auxDesc.push(index);
+      }
+    });
+    if(!(JSON.stringify(auxPhones) === JSON.stringify(auxDesc))) return 0;
+    if(contPhones !== contDesc || (contPhones === 0 && contDesc === 0)) return 0; 
+    else return 1;
   }
 
   useEffect(() => {
