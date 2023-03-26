@@ -5,7 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
-import { list } from '../service/API';
+import { list, registerPeople } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -46,10 +46,33 @@ export default function App() {
     if(name === '' || cpf === '' || rg === '' || cep === '' || street === '' || complement === '' || sector === '' || city === '' || uf === 'Select' || uf === '')
       toast('Preencha os dados corretamente!');
     else{
-      const arra = [name, cpf, rg, cep, street, complement, sector, city, uf];
-      console.log(arra);
-
+      
       if(!(validateArrays(phoneArray, descArray))) toast('Insira os dados do telefone corretamente!');
+      else {
+        let obj = [];
+        phoneArray.map((value, index) => {
+          if(phoneArray[index] !== '' && descArray[index] !== '') obj.push({phone: phoneArray[index], description: descArray[index]})
+        });
+
+        registerPeople({
+          name, 
+          cpf, 
+          rg, 
+          cep, 
+          street, 
+          complement, 
+          sector, 
+          city, 
+          uf, 
+          phones: [...obj]
+        })
+        .then((data) => {
+          console.log(data.data)
+        }).catch((error) => {
+          console.log(error);
+        });
+
+      }
     }
   }
 
@@ -80,6 +103,7 @@ export default function App() {
         auxDesc.push(index);
       }
     });
+
     if(!(JSON.stringify(auxPhones) === JSON.stringify(auxDesc))) return 0;
     if(contPhones !== contDesc || (contPhones === 0 && contDesc === 0)) return 0; 
     else return 1;
@@ -100,7 +124,7 @@ export default function App() {
       <ToastContainer />
       <Tilte>Cadastro de Pessoa</Tilte>
       <Container>
-        <Form onSubmit={register}>
+        <Form onSubmit={register} >
           <div> 
             <p>Nome:</p>
             <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)}/>

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost';
 
-function register(body){
+function registerPeople(body){
   const promise = axios.post(`${BASE_URL}/`, body);
   return promise;
 }
@@ -13,4 +13,4 @@ function list(){
 }
 
 
-export { register, list };
+export { registerPeople, list };
