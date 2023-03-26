@@ -1,23 +1,13 @@
 import GlobalStyles from "../styles/globalStyles";
 import styled from "styled-components";
 import Form from "../styles/Form";
-import Input from "./Input";
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
 import { list } from '../service/API';
-
-const names = [
-  {type: 'Nome:', name: 'name'},
-  {type: 'CPF:', name: 'cpf'},
-  {type: 'RG:', name: 'rg'},
-  {type: 'CEP:', name: 'cep'},
-  {type: 'Logradouro:', name: 'street'},
-  {type: 'Complemento:', name: 'complement'},
-  {type: 'Setor:', name: 'sector'},
-  {type: 'Cidade:', name: 'city'},
-];
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UFs = [
   'Select',  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
@@ -25,23 +15,54 @@ const UFs = [
 
 export default function App() {
   const [phoneArray, setPhoneArray] = useState([1, 2, 3, 4, 5]);
+  const [phoneArray2, setPhoneArray2] = useState([...phoneArray]);
+  const [name, setName] = useState('')
+  const [cpf, setCpf] = useState('')
+  const [rg, setRg] = useState('')
+  const [cep, setCep] = useState('')
+  const [street, setStreet] = useState('')
+  const [complement, setComplement] = useState('')
+  const [sector, setSector] = useState('')
+  const [city, setCity] = useState('')
+  const [uf, setUf] = useState('');
 
   function removePhones(){
-    if(phoneArray.length >= 5){
+    if(phoneArray.length > 5){
       const arr = [...phoneArray]; 
       arr.pop(); 
       setPhoneArray([...arr]);
+      setPhoneArray2([...arr]);
     }
+  }
+
+  function addPhones(){
+    setPhoneArray([...phoneArray, phoneArray[phoneArray.length-1]+1]);
+    setPhoneArray2([...phoneArray2, phoneArray2[phoneArray2.length-1]+1]);
   }
 
   function register(event){
     event.preventDefault();
+    if(uf === 'Select' || uf === '') toast('Selecione um Estado válido!');
+    else{
+      const arra = [name, cpf, rg, cep, street, complement, sector, city, uf];
+      console.log(arra);
+    }
+  }
 
+  function handleChangePhone(e, index, model){
+    console.log(phoneArray[index], phoneArray2[index]);
+    if(model === 1){
+      phoneArray[index] = e.target.value;
+      setPhoneArray([...phoneArray]);
+    }else{
+      phoneArray2[index] = e.target.value;
+      setPhoneArray2([...phoneArray2]);
+    }
   }
 
   useEffect(() => {
     list().then((data) => {
-      console.log(data);
+      console.log(data.data);
     }).catch((error) => {
       console.log(error);
     })
@@ -51,14 +72,47 @@ export default function App() {
   return (
     <>
       <GlobalStyles />
+      <ToastContainer />
       <Tilte>Cadastro de Pessoa</Tilte>
       <Container>
         <Form onSubmit={register}>
-          {names.map((value, index) => <Input key={index} type={value.type} name={value.name}/>)}
+          <div> 
+            <p>Nome:</p>
+            <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)}/>
+          </div>
+          <div> 
+            <p>CPF:</p>
+            <input type="text" name="cpf" required value={cpf} onChange={(e) => setCpf(e.target.value)}/>
+          </div>
+          <div> 
+            <p>RG:</p>
+            <input type="text" name="rg" required value={rg} onChange={(e) => setRg(e.target.value)}/>
+          </div>
+          <h2>Endereço</h2>
+          <div> 
+            <p>CEP:</p>
+            <input type="text" name="cep" required value={cep} onChange={(e) => setCep(e.target.value)}/>
+          </div>
+          <div> 
+            <p>Logradouro:</p>
+            <input type="text" name="street" required value={street} onChange={(e) => setStreet(e.target.value)}/>
+          </div>
+          <div> 
+            <p>Complemento:</p>
+            <input type="text" name="complement" required value={complement} onChange={(e) => setComplement(e.target.value)}/>
+          </div>
+          <div> 
+            <p>Setor:</p>
+            <input type="text" name="sector" required value={sector} onChange={(e) => setSector(e.target.value)}/>
+          </div>
+          <div> 
+            <p>Cidade:</p>
+            <input type="text" name="city" required value={city} onChange={(e) => setCity(e.target.value)}/>
+          </div>
           <div>  
             <p>UF:</p>
-            <select>
-              {UFs.map((value, index) => <option value={value} key={index}>{value}</option>)}
+            <select value={uf} onChange={(e) => setUf(e.target.value)}>
+              {UFs.map((value, index) => <option value={value} key={index} >{value}</option>)}
             </select>
           </div>
           <span>
@@ -71,11 +125,11 @@ export default function App() {
             <h1>Telefone</h1>
             <h1>Descrição Telefone</h1>
           </div>
-          {phoneArray.map((value, index) => <PhoneInput key={index} num={value}/>)}
+          {phoneArray.map((value, index) => <PhoneInput key={index} index={index} value={value} func={handleChangePhone}/>)}
           <Minus onClick={() => removePhones()}> 
             <AiFillMinusCircle color="#fff" size="25px"/>
           </Minus>
-          <Plus onClick={() => setPhoneArray([...phoneArray, phoneArray[phoneArray.length-1]+1])}> 
+          <Plus onClick={() => addPhones()}> 
             <AiFillPlusCircle color="#fff" size="25px"/>
           </Plus>
         </Phones>

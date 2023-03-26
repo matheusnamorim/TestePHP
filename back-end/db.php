@@ -3,7 +3,7 @@
 $usuario = "postgres";
 $senha = "123456";
 $endereco = "localhost";
-$banco = "voucher";
+$banco = "Teste";
 
 try{
   $pdo = new PDO("pgsql:host=$endereco;port=5432;dbname=$banco", $usuario, $senha, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);

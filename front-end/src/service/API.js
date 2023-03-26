@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://localhost:8000';
+const BASE_URL = 'http://localhost';
 
 function register(body){
-  const promise = axios.post(`${BASE_URL}/index.php`, body);
+  const promise = axios.post(`${BASE_URL}/`, body);
   return promise;
 }
 
 function list(){
-  const promise = axios.get(`${BASE_URL}/index.php`);
+  const promise = axios.get(`${BASE_URL}/`);
   return promise;
 }
 
