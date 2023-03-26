@@ -9,7 +9,15 @@ class Phones{
     $this->description = $description;
   }
 
+  public function getPhone(){
+    return $this->phone;
+  }
+
+  public function getDescription(){
+    return $this->description;
+  }
+
   public function getData(){
-    return "{$this->phone}, {$this->description}";
+    return "{$this->phone} - {$this->description}";
   }
 }

@@ -5,7 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
-import { list, registerPeople } from '../service/API';
+import { listPeople, listPhone, registerPeople } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,6 +25,8 @@ export default function App() {
   const [sector, setSector] = useState('')
   const [city, setCity] = useState('')
   const [uf, setUf] = useState('');
+  const [listOfPeople, setListOfPeople] = useState([]);
+  const [listOfPhones, setListOfPhones] = useState([]);
 
   function removePhones(){
     if(phoneArray.length > 5){
@@ -110,13 +112,19 @@ export default function App() {
   }
 
   useEffect(() => {
-    list().then((data) => {
+    listPeople().then((data) => {
       console.log(data.data);
+      //setListOfPeople(data.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+    listPhone().then((data) => {
+      console.log(data.data);
+      setListOfPhones(data.data);
     }).catch((error) => {
       console.log(error);
     })
   }, []);
-
 
   return (
     <>
@@ -183,6 +191,27 @@ export default function App() {
           </Plus>
         </Phones>
       </Container>
+      <Tilte>Dados Gravados</Tilte>
+      <ContainerData>
+        <Data>
+          <div>Nome</div>
+          <div>CPF</div>
+          <div>RG</div>
+          <div>CEP</div>
+          <div>Telefone - Descrição</div>
+        </Data>
+        {listOfPeople.length !== 0 ? 
+          listOfPeople.map((value, index) => 
+          <Data key={index}>
+            <div><p>{value.name}</p></div>
+            <div><p>{value.cpf}</p></div>
+            <div><p>{value.rg}</p></div>
+            <div><p>{value.cep}</p></div>
+            <div><p>{value.cep}</p></div>
+            <button>Editar</button>
+          </Data>)
+        : <></>}
+      </ContainerData>
     </>
   )
 }
@@ -201,6 +230,7 @@ const Tilte = styled.h1`
 
 const Container = styled.div`
   display: flex;
+  margin-bottom: 50px;
 `;
 
 const Phones = styled.div`
@@ -248,4 +278,48 @@ const Minus = styled.span`
   bottom: 10px;
   right: 85px;
   cursor: pointer;
+`;
+
+const ContainerData = styled.div`
+  background-color: #506266;
+  border: 1px solid #FFF;
+  border-radius: 10px;
+  width: 1365px;
+`;
+
+const Data = styled.div`
+  display: flex;
+  align-items: center;
+
+  div{
+    border-right: 1px solid #FFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFF;
+    min-width: 250px;
+    height: 50px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  button{
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    min-width: 100px;
+    background-color: #d0d4d4;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    margin-left: 8px;
+  }
 `;

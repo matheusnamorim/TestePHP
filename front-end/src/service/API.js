@@ -7,10 +7,15 @@ function registerPeople(body){
   return promise;
 }
 
-function list(){
-  const promise = axios.get(`${BASE_URL}/`);
+function listPeople(){
+  const promise = axios.get(`${BASE_URL}/?path=people`);
+  return promise;
+}
+
+function listPhone(){
+  const promise = axios.get(`${BASE_URL}/?path=phone`);
   return promise;
 }
 
 
-export { registerPeople, list };
+export { registerPeople, listPeople, listPhone };
