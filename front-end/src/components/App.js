@@ -113,13 +113,11 @@ export default function App() {
 
   useEffect(() => {
     listPeople().then((data) => {
-      console.log(data.data);
-      //setListOfPeople(data.data);
+      setListOfPeople(data.data);
     }).catch((error) => {
       console.log(error);
     });
     listPhone().then((data) => {
-      console.log(data.data);
       setListOfPhones(data.data);
     }).catch((error) => {
       console.log(error);
@@ -207,7 +205,9 @@ export default function App() {
             <div><p>{value.cpf}</p></div>
             <div><p>{value.rg}</p></div>
             <div><p>{value.cep}</p></div>
-            <div><p>{value.cep}</p></div>
+            <div>{listOfPhones.map((val, index) => {
+              if(value.id === val.userid) return <p key={index}>{val.phone} - {val.description}</p>;
+            })}</div>
             <button>Editar</button>
           </Data>)
         : <></>}
@@ -298,9 +298,10 @@ const Data = styled.div`
     font-weight: 700;
     color: #FFF;
     min-width: 250px;
-    height: 50px;
+    min-height: 50px;
     padding: 10px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
@@ -309,6 +310,7 @@ const Data = styled.div`
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     font-weight: 400;
+    text-align: center;
   }
 
   button{
