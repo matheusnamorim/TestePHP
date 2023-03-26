@@ -27,6 +27,7 @@ export default function App() {
   const [uf, setUf] = useState('');
   const [listOfPeople, setListOfPeople] = useState([]);
   const [listOfPhones, setListOfPhones] = useState([]);
+  const [reload, setReload] = useState(false);
 
   function removePhones(){
     if(phoneArray.length > 5){
@@ -69,7 +70,8 @@ export default function App() {
           phones: [...obj]
         })
         .then((data) => {
-          console.log(data.data)
+          toast(data.data);
+          setReload(!reload);
         }).catch((error) => {
           console.log(error);
         });
@@ -122,7 +124,7 @@ export default function App() {
     }).catch((error) => {
       console.log(error);
     })
-  }, []);
+  }, [reload]);
 
   return (
     <>
