@@ -130,15 +130,19 @@ export default function App() {
             });
           }else{
             if(value.phone !== listOfPhonesIds[index].phone || value.description !== listOfPhonesIds[index].description){
-              updatePhoneById({
-                phone: value.phone,
-                description: value.description
-              }, listOfPhonesIds[index].id).then((data) => {
-                toast(data.data);
-                setReload(!reload);
-              }).catch((err) => {
-                console.log(err);
-              });
+              if(value.phone === '' && value.description === ''){
+                console.log('tata');
+              }else{
+                updatePhoneById({
+                  phone: value.phone,
+                  description: value.description
+                }, listOfPhonesIds[index].id).then((data) => {
+                  toast(data.data);
+                  setReload(!reload);
+                }).catch((err) => {
+                  console.log(err);
+                });
+              }
             }
           }
         });
@@ -280,93 +284,141 @@ export default function App() {
     <>
       <GlobalStyles />
       <ToastContainer />
-      <Tilte>Cadastro de Pessoa</Tilte>
-      <Container>
-        <Form onSubmit={register} >
-          <div> 
-            <p>Nome:</p>
-            <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)}/>
-          </div>
-          <div> 
-            <p>CPF:</p>
-            <input type="text" name="cpf" required value={cpf} onChange={(e) => setCpf(e.target.value)}/>
-          </div>
-          <div> 
-            <p>RG:</p>
-            <input type="text" name="rg" required value={rg} onChange={(e) => setRg(e.target.value)}/>
-          </div>
-          <h2>Endereço</h2>
-          <div> 
-            <p>CEP:</p>
-            <input type="text" name="cep" required value={cep} onChange={(e) => setCep(e.target.value)}/>
-          </div>
-          <div> 
-            <p>Logradouro:</p>
-            <input type="text" name="street" required value={street} onChange={(e) => setStreet(e.target.value)}/>
-          </div>
-          <div> 
-            <p>Complemento:</p>
-            <input type="text" name="complement" required value={complement} onChange={(e) => setComplement(e.target.value)}/>
-          </div>
-          <div> 
-            <p>Setor:</p>
-            <input type="text" name="sector" required value={sector} onChange={(e) => setSector(e.target.value)}/>
-          </div>
-          <div> 
-            <p>Cidade:</p>
-            <input type="text" name="city" required value={city} onChange={(e) => setCity(e.target.value)}/>
-          </div>
-          <div>  
-            <p>UF:</p>
-            <select value={uf} onChange={(e) => setUf(e.target.value)}>
-              {UFs.map((value, index) => <option value={value} key={index} >{value}</option>)}
-            </select>
-          </div>
-          <span>
-            <Button disabled={disabled} onClick={() => deletePeople(idUser)}>Excluir</Button>
-            {disabled ? <Button disabled={disabled} onClick={() => updatePeople(idUser)}>Atualizar</Button> :<button>Gravar</button>}
-          </span>
-        </Form>
-        <Phones>
-          <div>
-            <h1>Telefone</h1>
-            <h1>Descrição Telefone</h1>
-          </div>
-          {phoneArray.map((value, index) => <PhoneInput key={index} index={index} value={value} desc={descArray} func={handleChangePhone}/>)}
-          <Minus onClick={() => removePhones()}> 
-            <AiFillMinusCircle color="#fff" size="25px"/>
-          </Minus>
-          <Plus onClick={() => addPhones()}> 
-            <AiFillPlusCircle color="#fff" size="25px"/>
-          </Plus>
-        </Phones>
-      </Container>
-      <Tilte>Dados Gravados</Tilte>
-      <ContainerData>
-        <Data>
-          <div>Nome</div>
-          <div>CPF</div>
-          <div>RG</div>
-          <div>CEP</div>
-          <div>Telefone - Descrição</div>
-        </Data>
-        {listOfPeople.length !== 0 ? 
-          listOfPeople.map((value, index) => 
-          <Data key={index}>
-            <div><p>{value.name}</p></div>
-            <div><p>{value.cpf}</p></div>
-            <div><p>{value.rg}</p></div>
-            <div><p>{value.cep}</p></div>
-            <div>{listOfPhones.map((val, index) => {
-              if(value.id === val.userid) return <p key={index}>{val.phone} - {val.description}</p>;
-            })}</div>
-            <button onClick={() => edit(value.id)}>Editar</button>
-          </Data>)
-        : <></>}
-      </ContainerData>
+      <Wrapper>
+        <Tilte>Cadastro de Pessoa</Tilte>
+        <Container>
+          <Form onSubmit={register} >
+            <div> 
+              <p>Nome:</p>
+              <input type="text" name="name" required value={name} onChange={(e) => setName(e.target.value)}/>
+            </div>
+            <div> 
+              <p>CPF:</p>
+              <input type="text" name="cpf" required value={cpf} onChange={(e) => setCpf(e.target.value)}/>
+            </div>
+            <div> 
+              <p>RG:</p>
+              <input type="text" name="rg" required value={rg} onChange={(e) => setRg(e.target.value)}/>
+            </div>
+            <h2>Endereço</h2>
+            <div> 
+              <p>CEP:</p>
+              <input type="text" name="cep" required value={cep} onChange={(e) => setCep(e.target.value)}/>
+            </div>
+            <div> 
+              <p>Logradouro:</p>
+              <input type="text" name="street" required value={street} onChange={(e) => setStreet(e.target.value)}/>
+            </div>
+            <div> 
+              <p>Complemento:</p>
+              <input type="text" name="complement" required value={complement} onChange={(e) => setComplement(e.target.value)}/>
+            </div>
+            <div> 
+              <p>Setor:</p>
+              <input type="text" name="sector" required value={sector} onChange={(e) => setSector(e.target.value)}/>
+            </div>
+            <div> 
+              <p>Cidade:</p>
+              <input type="text" name="city" required value={city} onChange={(e) => setCity(e.target.value)}/>
+            </div>
+            <div>  
+              <p>UF:</p>
+              <select value={uf} onChange={(e) => setUf(e.target.value)}>
+                {UFs.map((value, index) => <option value={value} key={index} >{value}</option>)}
+              </select>
+            </div>
+            <span>
+              <Button disabled={disabled} onClick={() => deletePeople(idUser)}>Excluir</Button>
+              {disabled ? <Button disabled={disabled} onClick={() => updatePeople(idUser)}>Atualizar</Button> :<button>Gravar</button>}
+            </span>
+          </Form>
+          <Phones>
+            <div>
+              <h1>Telefone</h1>
+              <h1>Descrição Telefone</h1>
+            </div>
+            {phoneArray.map((value, index) => <PhoneInput key={index} index={index} value={value} desc={descArray} func={handleChangePhone}/>)}
+            <Minus onClick={() => removePhones()}> 
+              <AiFillMinusCircle color="#fff" size="25px"/>
+            </Minus>
+            <Plus onClick={() => addPhones()}> 
+              <AiFillPlusCircle color="#fff" size="25px"/>
+            </Plus>
+          </Phones>
+        </Container>
+        <Tilte>Dados Gravados</Tilte>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>RG</th>
+              <th>CEP</th>
+              <th>Telefone - Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+          {listOfPeople.length !== 0 ? 
+            listOfPeople.map((value, index) => 
+            <tr key={index}>
+              <td><p>{value.name}</p></td>
+              <td><p>{value.cpf}</p></td>
+              <td><p>{value.rg}</p></td>
+              <td><p>{value.cep}</p></td>
+              <td>{listOfPhones.map((val, index) => {
+                if(value.id === val.userid) return <p key={index}>{val.phone} - {val.description}</p>;
+              })}</td>
+              <td><button onClick={() => edit(value.id)}>Editar</button></td>
+            </tr>)
+          : <></>}
+          </tbody>
+        </table>
+      </Wrapper>
     </>
   )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  table{
+    border: 1px solid #fFF;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    background-color: #506266;
+
+    thead, tbody, tr, td, th{
+      padding: 20px;
+      border: 1px solid #fFF;
+      height: 40px;
+    }
+    thead{
+      font-size: 15px;
+      font-weight: 700;
+      color: #fFF
+    }
+    tr, td{
+      font-size: 15px;
+      font-weight: 400;
+      color: #fFF;
+      width: 20%;
+    }
+    
+    button{
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    min-width: 100px;
+    background-color: #d0d4d4;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  }
+`;
 
 const Button = styled.div`
   border: none;
@@ -396,7 +448,11 @@ const Tilte = styled.h1`
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
   margin-bottom: 50px;
+  flex-wrap: wrap;
+  gap: 50px;
+
 `;
 
 const Phones = styled.div`
@@ -406,7 +462,6 @@ const Phones = styled.div`
   height: 100%;
   border-radius: 10px;
   padding: 20px 20px 40px 20px;
-  margin-left: 20px;
   background-color: #506266;
   border: 1px solid #fff;
 
@@ -444,54 +499,4 @@ const Minus = styled.span`
   bottom: 10px;
   right: 85px;
   cursor: pointer;
-`;
-
-const ContainerData = styled.div`
-  background-color: #506266;
-  border: 1px solid #FFF;
-  border-radius: 10px;
-  width: 1365px;
-
-  &>div:nth-child(1){
-    border-bottom: 1px solid #FFF;
-  }
-
-`;
-
-const Data = styled.div`
-  display: flex;
-  align-items: center;
-
-  div{
-    font-family: 'Roboto', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: #FFF;
-    min-width: 250px;
-    min-height: 50px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  p{
-    font-family: 'Roboto', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    text-align: center;
-  }
-
-  button{
-    border: none;
-    border-radius: 5px;
-    height: 40px;
-    min-width: 100px;
-    background-color: #d0d4d4;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 700;
-    margin-left: 8px;
-  }
 `;

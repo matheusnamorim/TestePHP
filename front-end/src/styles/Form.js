@@ -27,7 +27,7 @@ const Wrapper = styled.form`
   }
 
   input{
-    width: 500px;
+    width: 400px;
     height: 30px;
     border-radius: 4px;
     border: none;
