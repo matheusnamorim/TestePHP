@@ -5,7 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
-import { listPeople, listPhone, registerPeople, listUserById } from '../service/API';
+import { listPeople, listPhone, registerPeople, listUserById, deleteById } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,6 +29,7 @@ export default function App() {
   const [listOfPhones, setListOfPhones] = useState([]);
   const [reload, setReload] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [idUser, setIdUser] = useState('');
 
   useEffect(() => {
     listPeople().then((data) => {
@@ -146,6 +147,7 @@ export default function App() {
       setCity(people.city);
       setDisabled(true);
       setUf(people.uf);
+      setIdUser(people.id);
     }).catch((err) => {
       console.log(err);
     });
@@ -168,6 +170,35 @@ export default function App() {
   
     setPhoneArray([...auxPhones]);
     setDescArray([...auxDesc]);
+  }
+
+  function deletePeople(id){
+    if(window.confirm("Deseja realmente excluir esse registro?")){
+      deleteById(id).then((data) => {
+        toast(data.data);
+        setReload(!reload);
+        setDisabled(false);
+        clearInput();
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  function clearInput(){
+      setName("");
+      setCpf("");
+      setRg("");
+      setCep("");
+      setStreet("");
+      setComplement("");
+      setSector("");
+      setCity("");
+      setDisabled("");
+      setUf("Select");
+
+      setPhoneArray(['', '', '', '', '']);
+      setDescArray(['', '', '', '', '']);
   }
 
   return (
@@ -217,8 +248,8 @@ export default function App() {
             </select>
           </div>
           <span>
-            <Delete disabled={disabled}>Excluir</Delete>
-            <button>Gravar</button>
+            <Button disabled={disabled} onClick={() => deletePeople(idUser)}>Excluir</Button>
+            {disabled ? <Button disabled={disabled} >Atualizar</Button> :<button>Gravar</button>}
           </span>
         </Form>
         <Phones>
@@ -262,8 +293,22 @@ export default function App() {
   )
 }
 
-const Delete = styled.button`
-  display: ${props => props.disabled ? 'initial': 'none'};
+const Button = styled.div`
+  border: none;
+  border-radius: 5px;
+  height: 40px;
+  min-width: 100px;
+  background-color: #d0d4d4;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 20px;
+  color: #000;
+  opacity: ${props => props.disabled ? 1: 0};
 `;
 
 const Tilte = styled.h1`

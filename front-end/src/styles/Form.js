@@ -59,6 +59,7 @@ const Wrapper = styled.form`
 
   button{
     border: none;
+    font-family: 'Roboto', sans-serif;
     border-radius: 5px;
     height: 40px;
     min-width: 100px;

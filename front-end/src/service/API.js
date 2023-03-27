@@ -22,5 +22,10 @@ function listUserById(id){
   return promise;
 }
 
+function deleteById(id){
+  const promise = axios.delete(`${BASE_URL}/?path=${id}`);
+  return promise;
+}
 
-export { registerPeople, listPeople, listPhone, listUserById };
+
+export { registerPeople, listPeople, listPhone, listUserById, deleteById };

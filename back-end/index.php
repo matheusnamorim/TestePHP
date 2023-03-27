@@ -55,3 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   echo "Inserido com sucesso!";
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $pdo->query("DELETE FROM phones WHERE userid= {$_GET['path']};");
+  $pdo->query("DELETE FROM people WHERE id= {$_GET['path']};");
+
+  echo "Registro excluído com sucesso!";
+}
