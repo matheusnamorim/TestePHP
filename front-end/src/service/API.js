@@ -27,5 +27,10 @@ function deleteById(id){
   return promise;
 }
 
+function updateById(body, id){
+  const promise = axios.update(`${BASE_URL}/?path=${id}`, body);
+  return promise;
+}
 
-export { registerPeople, listPeople, listPhone, listUserById, deleteById };
+
+export { registerPeople, listPeople, listPhone, listUserById, deleteById, updateById };

@@ -58,19 +58,30 @@ export default function App() {
     setDescArray([...descArray, descArray[descArray.length-1]]);
   }
 
+  function validateInput(){
+    if(name === '' || cpf === '' || rg === '' || cep === '' || street === '' || complement === '' || sector === '' || city === '' || uf === 'Select' || uf === '') return 1;
+    else return 0;
+  }
+
+  function createPhonesAndDescription(){
+    let obj = [];
+    phoneArray.map((value, index) => {
+      if(phoneArray[index] !== '' && descArray[index] !== '') obj.push({phone: phoneArray[index], description: descArray[index]})
+    });
+    return obj;
+  }
+
   function register(event){
     event.preventDefault();
 
-    if(name === '' || cpf === '' || rg === '' || cep === '' || street === '' || complement === '' || sector === '' || city === '' || uf === 'Select' || uf === '')
+    if(validateInput())
       toast('Preencha os dados corretamente!');
     else{
       
       if(!(validateArrays(phoneArray, descArray))) toast('Insira os dados do telefone corretamente!');
       else {
-        let obj = [];
-        phoneArray.map((value, index) => {
-          if(phoneArray[index] !== '' && descArray[index] !== '') obj.push({phone: phoneArray[index], description: descArray[index]})
-        });
+        
+        let obj = createPhonesAndDescription();
 
         registerPeople({
           name, 
