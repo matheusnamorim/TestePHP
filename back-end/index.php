@@ -12,16 +12,21 @@ require_once("people.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   
-  if($_GET['path'] === 'people'){
+  if($_GET['path'] === 'listOfPeople'){
     $data = $pdo->query("SELECT * FROM people")->fetchAll();
 
     $result = json_encode($data);
     echo $result;
-  }else if($_GET['path'] === 'phone'){
+  }else if($_GET['path'] === 'listOfPhone'){
     $data = $pdo->query("SELECT * FROM phones;")->fetchAll();
     $result = json_encode($data);
     echo $result;
+  }else if($_GET['path'] === 'people'){
+    $data = $pdo->query("SELECT * FROM people WHERE id = {$_GET['id']};")->fetchAll();
+    $result = json_encode($data);
+    echo $result;
   }
+  
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -49,3 +54,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
   echo "Inserido com sucesso!";
 }
+

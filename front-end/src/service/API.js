@@ -8,14 +8,19 @@ function registerPeople(body){
 }
 
 function listPeople(){
-  const promise = axios.get(`${BASE_URL}/?path=people`);
+  const promise = axios.get(`${BASE_URL}/?path=listOfPeople`);
   return promise;
 }
 
 function listPhone(){
-  const promise = axios.get(`${BASE_URL}/?path=phone`);
+  const promise = axios.get(`${BASE_URL}/?path=listOfPhone`);
+  return promise;
+}
+
+function listUserById(id){
+  const promise = axios.get(`${BASE_URL}/?path=people&id=${id}`);
   return promise;
 }
 
 
-export { registerPeople, listPeople, listPhone };
+export { registerPeople, listPeople, listPhone, listUserById };

@@ -5,7 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
-import { listPeople, listPhone, registerPeople } from '../service/API';
+import { listPeople, listPhone, registerPeople, listUserById } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -28,6 +28,20 @@ export default function App() {
   const [listOfPeople, setListOfPeople] = useState([]);
   const [listOfPhones, setListOfPhones] = useState([]);
   const [reload, setReload] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    listPeople().then((data) => {
+      setListOfPeople(data.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+    listPhone().then((data) => {
+      setListOfPhones(data.data);
+    }).catch((error) => {
+      console.log(error);
+    })
+  }, [reload]);
 
   function removePhones(){
     if(phoneArray.length > 5){
@@ -72,6 +86,7 @@ export default function App() {
         .then((data) => {
           toast(data.data);
           setReload(!reload);
+          setDisabled(false);
         }).catch((error) => {
           console.log(error);
         });
@@ -113,18 +128,23 @@ export default function App() {
     else return 1;
   }
 
-  useEffect(() => {
-    listPeople().then((data) => {
-      setListOfPeople(data.data);
-    }).catch((error) => {
-      console.log(error);
+  function edit(id){
+    listUserById(id).then((data) => {
+      const people = data.data[0];
+      setName(people.name);
+      setCpf(people.cpf);
+      setRg(people.rg);
+      setCep(people.cep);
+      setStreet(people.street);
+      setComplement(people.complement);
+      setSector(people.sector);
+      setCity(people.city);
+      setDisabled(true);
+      setUf(people.uf);
+    }).catch((err) => {
+      console.log(err);
     });
-    listPhone().then((data) => {
-      setListOfPhones(data.data);
-    }).catch((error) => {
-      console.log(error);
-    })
-  }, [reload]);
+  }
 
   return (
     <>
@@ -173,7 +193,7 @@ export default function App() {
             </select>
           </div>
           <span>
-            <Delete>Excluir</Delete>
+            <Delete disabled={disabled}>Excluir</Delete>
             <button>Gravar</button>
           </span>
         </Form>
@@ -210,7 +230,7 @@ export default function App() {
             <div>{listOfPhones.map((val, index) => {
               if(value.id === val.userid) return <p key={index}>{val.phone} - {val.description}</p>;
             })}</div>
-            <button>Editar</button>
+            <button onClick={() => edit(value.id)}>Editar</button>
           </Data>)
         : <></>}
       </ContainerData>
@@ -219,7 +239,7 @@ export default function App() {
 }
 
 const Delete = styled.button`
-  display: none;
+  display: ${props => props.disabled ? 'initial': 'none'};
 `;
 
 const Tilte = styled.h1`
@@ -287,6 +307,11 @@ const ContainerData = styled.div`
   border: 1px solid #FFF;
   border-radius: 10px;
   width: 1365px;
+
+  &>div:nth-child(1){
+    border-bottom: 1px solid #FFF;
+  }
+
 `;
 
 const Data = styled.div`
@@ -294,7 +319,6 @@ const Data = styled.div`
   align-items: center;
 
   div{
-    border-right: 1px solid #FFF;
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
     font-weight: 700;

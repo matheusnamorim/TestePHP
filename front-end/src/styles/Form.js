@@ -67,6 +67,7 @@ const Wrapper = styled.form`
     font-size: 15px;
     font-weight: 700;
     margin-left: 20px;
+    color: #000;
   }
 
   span{
