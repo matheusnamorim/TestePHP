@@ -36,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input')); 
 
   if($_GET['path'] === 'phone'){
-    echo "enrei aduas";
+    $phone = new Phones($data->phone, $data->description);
+
+    $pdo->query("INSERT INTO phones (userid, phone, description) VALUES ('{$_GET['id']}', '{$phone->getPhone()}', '{$phone->getDescription()}');");
   }else{
     $array = array();
     $arrayPhones = array();
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $arrayPhones[] = $phone->getPhone();
       $arrayDesc[] = $phone->getDescription();
     }
-  
+
     $people = new People($data->name, $data->cpf, $data->rg, $data->cep, $data->street, $data->complement, $data->sector, $data->city, $data->uf, $array);
   
     $pdo->query("INSERT INTO people (name, cpf, rg, cep, street, complement, sector, city, uf) VALUES ('{$people->getName()}','{$people->getCpf()}','{$people->getRg()}','{$people->getCep()}','{$people->getStreet()}','{$people->getComplement()}','{$people->getSector()}','{$people->getCity()}','{$people->getUf()}');");

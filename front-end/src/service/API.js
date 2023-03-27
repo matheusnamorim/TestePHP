@@ -43,8 +43,8 @@ function updatePhoneById(body, id){
   return promise;
 }
 
-function addPhone(body){
-  const promise = axios.post(`${BASE_URL}/?path=phone`, body);
+function addPhone(body, id){
+  const promise = axios.post(`${BASE_URL}/?path=phone&id=${id}`, body);
   return promise;
 }
 

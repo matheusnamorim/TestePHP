@@ -55,8 +55,8 @@ export default function App() {
   }
 
   function addPhones(){
-    setPhoneArray([...phoneArray, phoneArray[phoneArray.length-1]]);
-    setDescArray([...descArray, descArray[descArray.length-1]]);
+    setPhoneArray([...phoneArray, '']);
+    setDescArray([...descArray, '']);
   }
 
   function validateInput(){
@@ -123,7 +123,7 @@ export default function App() {
             addPhone({
               phone: value.phone,
               description: value.description
-            }).then((data) => {
+            }, idUser).then((data) => {
               console.log(data.data);
             }).catch((err) => {
               console.log(err);
