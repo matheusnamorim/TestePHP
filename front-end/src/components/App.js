@@ -97,10 +97,10 @@ export default function App() {
 
   function handleChangePhone(e, index, model){
     if(model === 1){
-      phoneArray[index] = e.target.value;
+      phoneArray[index] = e;
       setPhoneArray([...phoneArray]);
     }else{
-      descArray[index] = e.target.value;
+      descArray[index] = e;
       setDescArray([...descArray]);
     }
   }
@@ -129,6 +129,11 @@ export default function App() {
   }
 
   function edit(id){
+    phoneArray.map((value, index) => {
+      phoneArray[index] = '';
+      descArray[index] = '';
+    });
+
     listUserById(id).then((data) => {
       const people = data.data[0];
       setName(people.name);
@@ -144,6 +149,25 @@ export default function App() {
     }).catch((err) => {
       console.log(err);
     });
+
+    let auxPhones = [];
+    let auxDesc = [];
+    listOfPhones.filter((value) => {
+      if(id === value.userid) {
+        auxPhones.push(value.phone);
+        auxDesc.push(value.description);
+      }
+    });
+
+    if(auxPhones.length < 5){
+      for(let i=auxPhones.length; i<5; i++) {
+        auxPhones.push('');
+        auxDesc.push('');
+      }
+    }
+  
+    setPhoneArray([...auxPhones]);
+    setDescArray([...auxDesc]);
   }
 
   return (
@@ -202,7 +226,7 @@ export default function App() {
             <h1>Telefone</h1>
             <h1>Descrição Telefone</h1>
           </div>
-          {phoneArray.map((value, index) => <PhoneInput key={index} index={index} value={value} func={handleChangePhone}/>)}
+          {phoneArray.map((value, index) => <PhoneInput key={index} index={index} value={value} desc={descArray} func={handleChangePhone}/>)}
           <Minus onClick={() => removePhones()}> 
             <AiFillMinusCircle color="#fff" size="25px"/>
           </Minus>
