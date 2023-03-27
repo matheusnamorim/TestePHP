@@ -124,25 +124,21 @@ export default function App() {
               phone: value.phone,
               description: value.description
             }, idUser).then((data) => {
-              console.log(data.data);
+              toast(data.data);
             }).catch((err) => {
               console.log(err);
             });
           }else{
             if(value.phone !== listOfPhonesIds[index].phone || value.description !== listOfPhonesIds[index].description){
-              if(value.phone === '' && value.description === ''){
-                console.log('tata');
-              }else{
-                updatePhoneById({
-                  phone: value.phone,
-                  description: value.description
-                }, listOfPhonesIds[index].id).then((data) => {
-                  toast(data.data);
-                  setReload(!reload);
-                }).catch((err) => {
-                  console.log(err);
-                });
-              }
+              updatePhoneById({
+                phone: value.phone,
+                description: value.description
+              }, listOfPhonesIds[index].id).then((data) => {
+                toast(data.data);
+                setReload(!reload);
+              }).catch((err) => {
+                console.log(err);
+              });
             }
           }
         });
