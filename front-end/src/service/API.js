@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost';
 
 function registerPeople(body){
-  const promise = axios.post(`${BASE_URL}/`, body);
+  const promise = axios.post(`${BASE_URL}/?path='people'`, body);
   return promise;
 }
 
@@ -17,6 +17,12 @@ function listPhone(){
   return promise;
 }
 
+function listPhoneById(id){
+  const promise = axios.get(`${BASE_URL}/?path=listOfPhoneById&id=${id}`);
+  return promise;
+}
+
+
 function listUserById(id){
   const promise = axios.get(`${BASE_URL}/?path=people&id=${id}`);
   return promise;
@@ -28,9 +34,18 @@ function deleteById(id){
 }
 
 function updateById(body, id){
-  const promise = axios.update(`${BASE_URL}/?path=${id}`, body);
+  const promise = axios.put(`${BASE_URL}/?path=people&id=${id}`, body);
   return promise;
 }
 
+function updatePhoneById(body, id){
+  const promise = axios.put(`${BASE_URL}/?path=phone&id=${id}`, body);
+  return promise;
+}
 
-export { registerPeople, listPeople, listPhone, listUserById, deleteById, updateById };
+function addPhone(body){
+  const promise = axios.post(`${BASE_URL}/?path=phone`, body);
+  return promise;
+}
+
+export { registerPeople, listPeople, listPhone, listUserById, deleteById, updateById, listPhoneById, updatePhoneById, addPhone };

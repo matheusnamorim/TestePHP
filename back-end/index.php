@@ -25,17 +25,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $data = $pdo->query("SELECT * FROM people WHERE id = {$_GET['id']};")->fetchAll();
     $result = json_encode($data);
     echo $result;
+  }else if($_GET['path'] === 'listOfPhoneById'){
+    $data = $pdo->query("SELECT * FROM phones WHERE userid={$_GET['id']};")->fetchAll();
+    $result = json_encode($data);
+    echo $result;
   }
-  
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input')); 
 
+  if($_GET['path'] === 'phone'){
+    echo "enrei aduas";
+  }else{
+    $array = array();
+    $arrayPhones = array();
+    $arrayDesc = array();
+  
+    foreach($data->phones as $values){
+      $phone = new Phones($values->phone, $values->description);
+      $array[] = $phone->getData();
+      $arrayPhones[] = $phone->getPhone();
+      $arrayDesc[] = $phone->getDescription();
+    }
+  
+    $people = new People($data->name, $data->cpf, $data->rg, $data->cep, $data->street, $data->complement, $data->sector, $data->city, $data->uf, $array);
+  
+    $pdo->query("INSERT INTO people (name, cpf, rg, cep, street, complement, sector, city, uf) VALUES ('{$people->getName()}','{$people->getCpf()}','{$people->getRg()}','{$people->getCep()}','{$people->getStreet()}','{$people->getComplement()}','{$people->getSector()}','{$people->getCity()}','{$people->getUf()}');");
+    $index = $pdo->lastInsertId();
+  
+    for($i = 0; $i<count($arrayPhones); $i++){
+      $pdo->query("INSERT INTO phones (userid, phone, description) VALUES ('{$index}', '{$arrayPhones[$i]}', '{$arrayDesc[$i]}');");
+    }
+  }
+  echo "Inserido com sucesso!";
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $pdo->query("DELETE FROM phones WHERE userid= {$_GET['path']};");
+  $pdo->query("DELETE FROM people WHERE id= {$_GET['path']};");
+
+  echo "Registro excluído com sucesso!";
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $data = json_decode(file_get_contents("php://input")); 
+
   $array = array();
   $arrayPhones = array();
   $arrayDesc = array();
 
+  if($_GET['path'] === 'people'){
   foreach($data->phones as $values){
     $phone = new Phones($values->phone, $values->description);
     $array[] = $phone->getData();
@@ -45,19 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $people = new People($data->name, $data->cpf, $data->rg, $data->cep, $data->street, $data->complement, $data->sector, $data->city, $data->uf, $array);
 
-  $pdo->query("INSERT INTO people (name, cpf, rg, cep, street, complement, sector, city, uf) VALUES ('{$people->getName()}','{$people->getCpf()}','{$people->getRg()}','{$people->getCep()}','{$people->getStreet()}','{$people->getComplement()}','{$people->getSector()}','{$people->getCity()}','{$people->getUf()}');");
-  $index = $pdo->lastInsertId();
+  $pdo->query("UPDATE people SET name='{$people->getName()}', cpf='{$people->getCpf()}', rg='{$people->getRg()}', cep='{$people->getCep()}', street='{$people->getStreet()}', complement='{$people->getComplement()}', sector='{$people->getSector()}', city='{$people->getCity()}', uf='{$people->getUf()}' WHERE id='{$_GET['id']}';");
 
-  for($i = 0; $i<count($arrayPhones); $i++){
-    $pdo->query("INSERT INTO phones (userid, phone, description) VALUES ('{$index}', '{$arrayPhones[$i]}', '{$arrayDesc[$i]}');");
+  }else if($_GET['path'] === 'phone'){
+    $pdo->query("UPDATE phones SET phone='{$data->phone}', description='{$data->description}' WHERE id='{$_GET['id']}';");
   }
-    
-  echo "Inserido com sucesso!";
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-  $pdo->query("DELETE FROM phones WHERE userid= {$_GET['path']};");
-  $pdo->query("DELETE FROM people WHERE id= {$_GET['path']};");
-
-  echo "Registro excluído com sucesso!";
+  echo "Registro atualizado com sucesso!";
 }

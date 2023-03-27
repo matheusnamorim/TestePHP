@@ -5,7 +5,7 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useEffect } from "react";
-import { listPeople, listPhone, registerPeople, listUserById, deleteById } from '../service/API';
+import { listPeople, listPhone, registerPeople, listUserById, deleteById, updateById, listPhoneById, updatePhoneById, addPhone } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,6 +27,7 @@ export default function App() {
   const [uf, setUf] = useState('');
   const [listOfPeople, setListOfPeople] = useState([]);
   const [listOfPhones, setListOfPhones] = useState([]);
+  const [listOfPhonesIds, setListOfPhonesIds] = useState([]);
   const [reload, setReload] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [idUser, setIdUser] = useState('');
@@ -99,10 +100,67 @@ export default function App() {
           toast(data.data);
           setReload(!reload);
           setDisabled(false);
+          clearInput();
         }).catch((error) => {
           console.log(error);
         });
 
+      }
+    }
+  }
+
+
+  function updatePeople(id){
+    if(validateInput())
+      toast('Preencha os dados corretamente!');
+    else{
+      if(!(validateArrays(phoneArray, descArray))) toast('Insira os dados do telefone corretamente!');
+      else {
+        let obj = createPhonesAndDescription();
+
+        obj.map((value, index) => {
+          if(index >= listOfPhonesIds.length){
+            addPhone({
+              phone: value.phone,
+              description: value.description
+            }).then((data) => {
+              console.log(data.data);
+            }).catch((err) => {
+              console.log(err);
+            });
+          }else{
+            if(value.phone !== listOfPhonesIds[index].phone || value.description !== listOfPhonesIds[index].description){
+              updatePhoneById({
+                phone: value.phone,
+                description: value.description
+              }, listOfPhonesIds[index].id).then((data) => {
+                toast(data.data);
+                setReload(!reload);
+              }).catch((err) => {
+                console.log(err);
+              });
+            }
+          }
+        });
+
+        updateById({
+          name, 
+          cpf, 
+          rg, 
+          cep, 
+          street, 
+          complement, 
+          sector, 
+          city, 
+          uf, 
+          phones: [...obj]
+          }, id).then((data) => {
+            toast(data.data);
+            setReload(!reload);
+            clearInput();
+          }).catch((err) => {
+            console.log(err);
+          });
       }
     }
   }
@@ -145,6 +203,12 @@ export default function App() {
       phoneArray[index] = '';
       descArray[index] = '';
     });
+
+    listPhoneById(id).then((data) => {   
+      setListOfPhonesIds(data.data);
+    }).catch((err) => {
+      console.log(err);
+    })
 
     listUserById(id).then((data) => {
       const people = data.data[0];
@@ -260,7 +324,7 @@ export default function App() {
           </div>
           <span>
             <Button disabled={disabled} onClick={() => deletePeople(idUser)}>Excluir</Button>
-            {disabled ? <Button disabled={disabled} >Atualizar</Button> :<button>Gravar</button>}
+            {disabled ? <Button disabled={disabled} onClick={() => updatePeople(idUser)}>Atualizar</Button> :<button>Gravar</button>}
           </span>
         </Form>
         <Phones>
